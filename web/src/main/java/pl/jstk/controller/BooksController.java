@@ -28,8 +28,15 @@ public class BooksController {
 	@RequestMapping(value = "/books/book", method = RequestMethod.GET)
 	public ModelAndView book(@RequestParam("id") long id, ModelAndView model) {
 		model = new ModelAndView("book");
-		model.addObject("book", bookService.findBookById(id));
-		return model;
+		BookTo requestedBook = bookService.findBookById(id);
+		if (requestedBook != null) {
+			model.addObject("header", "Book info");
+			model.addObject("book", requestedBook);
+			return model;
+		} else {
+			model.addObject("header", "Sorry, there is no such book");
+			return model;
+		}
 	}
 
 	@RequestMapping(value = "/books/add", method = RequestMethod.GET)
@@ -53,17 +60,16 @@ public class BooksController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public ModelAndView searching(ModelAndView model) {
-		model = new ModelAndView("search");
-		model.addObject("queryBook", new BookTo());
-		return model;
+	public String searching(Model model) {
+		model.addAttribute("queryBook", new BookTo());
+		return "search";
 	}
 
-	@RequestMapping(value = "/search/searchResult", method = RequestMethod.POST)
-	public ModelAndView searchingResult(@ModelAttribute("queryBook") BookTo bookTo, ModelAndView model) {
-		model = new ModelAndView("searchResult");
-		model.addObject("bookList", bookService.searchBooks(bookTo));
-		return model;
+	@RequestMapping(value = "/search/searchResult", method = RequestMethod.GET)
+	public String searchingResult(@RequestParam("authors") String authors, @RequestParam("title") String title,
+			Model model) {
+		model.addAttribute("bookList", bookService.searchBooks(authors, title));
+		return "searchResult";
 	}
 
 }

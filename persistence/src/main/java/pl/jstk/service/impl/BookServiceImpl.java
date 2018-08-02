@@ -58,22 +58,24 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public BookTo findBookById(Long id) {
 		Optional<BookEntity> optEntity = bookRepository.findById(id);
-		BookEntity entity = optEntity.get();
-		return BookMapper.map(entity);
+		if (optEntity.isPresent()) {
+			BookEntity entity = optEntity.get();
+			return BookMapper.map(entity);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public List<BookTo> searchBooks(BookTo bookTo) {
-		System.out.println(bookTo.getAuthors() + bookTo.getTitle() + bookTo.getId() + bookTo.getStatus());
-		if (!bookTo.getAuthors().equals("") && (!bookTo.getTitle().equals(""))) {
-			System.out.println("This is called");
-			return BookMapper.map2To(bookRepository.findBookByAuthorAndTitle(bookTo.getAuthors(), bookTo.getTitle()));
+	public List<BookTo> searchBooks(String authors, String title) {
+		if (!authors.equals("") && (!title.equals(""))) {
+			return BookMapper.map2To(bookRepository.findBookByAuthorAndTitle(authors, title));
 		}
-		if (bookTo.getTitle().equals("")) {
-			return BookMapper.map2To(bookRepository.findBookByAuthor(bookTo.getAuthors()));
+		if (title.equals("")) {
+			return BookMapper.map2To(bookRepository.findBookByAuthor(authors));
 		}
-		if (bookTo.getAuthors().equals("")) {
-			return BookMapper.map2To(bookRepository.findBookByTitle(bookTo.getTitle()));
+		if (authors.equals("")) {
+			return BookMapper.map2To(bookRepository.findBookByTitle(title));
 		}
 		return null;
 	}

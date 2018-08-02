@@ -12,7 +12,7 @@ public interface BookService {
 
 	List<BookTo> findBooksByAuthor(String author);
 
-	List<BookTo> searchBooks(BookTo bookTo);
+	List<BookTo> searchBooks(String authors, String title);
 
 	BookTo findBookById(Long id);
 

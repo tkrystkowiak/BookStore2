@@ -20,10 +20,4 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ModelAndView loggingOut() {
-		ModelAndView model = new ModelAndView("logout");
-		return model;
-	}
-
 }
